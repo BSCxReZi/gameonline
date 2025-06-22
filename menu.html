@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pilih Mode Game</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to bottom right, #141e30, #243b55);
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #f1f1f1;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 30px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.05);
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+    }
+
+    h2 {
+      font-size: 28px;
+      margin-bottom: 30px;
+      text-shadow: 0 2px 6px rgba(0,0,0,0.4);
+    }
+
+    .button {
+      width: 100%;
+      padding: 14px 24px;
+      margin: 10px 0;
+      font-size: 17px;
+      border: none;
+      border-radius: 14px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+      font-weight: 500;
+      letter-spacing: 0.5px;
+    }
+
+    .mode-button {
+      background: #00b4d8;
+      color: white;
+    }
+
+    .mode-button:hover {
+      background: #48cae4;
+      transform: translateY(-2px);
+    }
+
+    .game-button {
+      background: #ffb703;
+      color: #000;
+      display: none;
+    }
+
+    .game-button:hover {
+      background: #ffd166;
+      transform: translateY(-2px);
+    }
+
+    .back-btn {
+      background: #6c757d;
+      color: white;
+      display: none;
+    }
+
+    .back-btn:hover {
+      background: #adb5bd;
+      transform: translateY(-2px);
+    }
+
+    .logout-btn {
+      background: #ef233c;
+      color: white;
+      margin-top: 20px;
+    }
+
+    .logout-btn:hover {
+      background: #d90429;
+      transform: translateY(-2px);
+    }
+
+    #game-options {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 20px;
+      animation: fadeIn 0.5s ease-in-out;
+      width: 100%;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 480px) {
+      h2 { font-size: 24px; }
+      .button { font-size: 16px; padding: 12px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>🎮 Pilih Mode Permainan</h2>
+
+    <div id="mode-options" style="width: 100%;">
+      <button class="button mode-button" onclick="pilihMode('solo')">Main Solo</button>
+      <button class="button mode-button" onclick="pilihMode('mabar')">Main Bareng (Mabar)</button>
+    </div>
+
+    <div id="game-options">
+      <h2 id="mode-title">Mode:</h2>
+      <button class="button game-button" onclick="mainGame('mancing')">🎣 Game Mancing</button>
+      <button id="game2" class="button game-button">🕹️</button>
+      <button id="back-btn" class="button back-btn" onclick="kembaliKeMode()">🔙 Kembali</button>
+    </div>
+
+    <button class="button logout-btn" onclick="logout()">Keluar</button>
+  </div>
+
+  <script>
+    function checkLogin() {
+      const key = localStorage.getItem("userKey");
+      const keys = JSON.parse(localStorage.getItem("adminKeys") || "[]");
+      const valid = keys.find(k => k.key === key && k.active === true);
+      if (!valid) {
+        alert("Akses ditolak! Silakan login ulang.");
+        window.location.href = "index.html";
+      }
+    }
+
+    function logout() {
+      localStorage.removeItem("userKey");
+      window.location.href = "index.html";
+    }
+
+    function pilihMode(mode) {
+      document.getElementById("mode-options").style.display = "none";
+      const gameOptions = document.getElementById("game-options");
+      gameOptions.style.display = "flex";
+
+      const game2 = document.getElementById("game2");
+      const backBtn = document.getElementById("back-btn");
+      const isSolo = mode === "solo";
+
+      document.getElementById("mode-title").innerText = "Mode: " + (isSolo ? "Solo" : "Mabar");
+      localStorage.setItem("gameMode", mode);
+
+      document.querySelectorAll(".game-button").forEach(btn => btn.style.display = "inline-block");
+      backBtn.style.display = "inline-block";
+
+      if (isSolo) {
+        game2.innerHTML = "TenTrix Game";
+        game2.onclick = () => window.location.href = "snake-vs-worms.html";
+      } else {
+        game2.innerHTML = "✈️ Game Pesawat Tempur";
+        game2.onclick = () => window.location.href = "pesawat.html";
+      }
+    }
+
+    function mainGame(game) {
+      if (game === "mancing") {
+        alert("Game Mancing coming soon! 🎣");
+        return;
+      }
+      // Tambahkan else jika ada game lain
+    }
+
+    function kembaliKeMode() {
+      // Sembunyikan game options
+      document.getElementById("game-options").style.display = "none";
+      // Tampilkan kembali mode options
+      document.getElementById("mode-options").style.display = "block";
+    }
+
+    checkLogin();
+  </script>
+
+</body>
+</html>
